@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Control Eléctrico de Terreno</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: white;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.panel {
+    background: #1f2937;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+input, select, textarea, button {
+    width: 100%;
+    padding: 12px;
+    margin: 7px 0;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: none;
+}
+
+button {
+    background: #22c55e;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.registro {
+    background: #374151;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.contadores {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>⚡ Control Eléctrico de Terreno</h1>
+
+<div class="contadores">
+    <div>Total: <b id="total">0</b></div>
+    <div>Pendientes: <b id="pendientes">0</b></div>
+    <div>Cerrados: <b id="cerrados">0</b></div>
+</div>
+
+<div class="panel">
+
+<input id="area" placeholder="Área (ej: Filtros)">
+
+<input id="tag" placeholder="TAG (ej: 0621-CN-001)">
+
+<select id="estado">
+    <option>Pendiente</option>
+    <option>En proceso</option>
+    <option>Cerrado</option>
+</select>
+
+<textarea id="observacion"
+placeholder="Observación eléctrica"></textarea>
+
+<button onclick="agregarRegistro()">
+Agregar registro
+</button>
+
+</div>
+
+<div id="lista"></div>
+
+<script>
+
+let registros = [];
+
+function agregarRegistro() {
+
+    const area = document.getElementById("area").value;
+    const tag = document.getElementById("tag").value;
+    const estado = document.getElementById("estado").value;
+    const observacion = document.getElementById("observacion").value;
+
+    if (!area || !tag || !observacion) {
+        alert("Completa los datos");
+        return;
+    }
+
+    registros.push({
+        area,
+        tag,
+        estado,
+        observacion
+    });
+
+    mostrarRegistros();
+}
+
+function mostrarRegistros() {
+
+    const lista = document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+    registros.forEach(r => {
+
+        lista.innerHTML += `
+        <div class="registro">
+        <b>${r.tag}</b><br>
+        Área: ${r.area}<br>
+        Estado: ${r.estado}<br>
+        ${r.observacion}
+        </div>
+        `;
+
+    });
+
+    document.getElementById("total").innerText =
+        registros.length;
+
+    document.getElementById("pendientes").innerText =
+        registros.filter(r => r.estado === "Pendiente").length;
+
+    document.getElementById("cerrados").innerText =
+        registros.filter(r => r.estado === "Cerrado").length;
+}
+
+</script>
+
+</body>
+</html>
